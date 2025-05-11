@@ -1,0 +1,81 @@
+import pygame
+import sys
+
+pygame.init()
+
+width, height = 600, 400
+screen = pygame.display.set_mode((width, height))
+pygame.display.set_caption('Музыккальный плеер')
+
+icon = pygame.image.load('icon.png')
+pygame.display.set_icon(icon)
+
+tracks = ['1track.mp3', '2track.mp3']
+current_track = 0
+
+pygame.mixer.init()
+pygame.mixer.music.load(tracks[current_track])
+
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GREEN = (0, 255, 0)
+RED =  (255, 0, 0)
+BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
+
+font = pygame.font.SysFont('Arial', 28)
+
+def draw_play_buttom():
+    pygame.draw.rect(screen, GREEN, (230, 300, 100,50))
+    text = font.render("play", True, BLACK)
+    screen.blit(text, (270,310))
+
+def draw_pause_buttom():
+    pygame.draw.rect(screen, GREEN, (230, 300, 100,50))
+    text = font.render("stop", True, GREEN)
+    screen.blit(text, (260,310))
+
+def draw_prev_buttom():
+    pygame.draw.rect(screen, RED, (100, 300, 100, 50))
+    text = font.render("<", True, BLACK)
+    screen.blit(text, (120, 310))
+
+def draw_next_buttom():
+    pygame.draw.rect(screen, RED, (400, 300, 100, 50))
+    text = font.render(">", True, BLACK)
+
+    screen.blit(text, (420, 310))
+
+def play_music():
+    pygame.mixer.music.play()
+
+def pause_music():
+    pygame.mixer.music.pause()
+
+is_playing = False
+
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = event.pos
+
+            if 250 <= mouse_x <= 350 and 300<= mouse_y <=350:
+                if not is_playing:
+                    play_music()
+                    is_playing = True
+                else:
+                    pause_music()
+                    is_playing = False
+
+
+
+
+    if not is_playing:
+        draw_play_buttom()
+    else:
+        draw_pause_buttom()
+
+    pygame.display.update()
