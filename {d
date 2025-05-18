@@ -1,6 +1,8 @@
 import pygame
 import sys
 
+from pygame.examples.cursors import image
+
 pygame.init()
 
 width, height = 600, 400
@@ -10,7 +12,8 @@ pygame.display.set_caption('Музыккальный плеер')
 icon = pygame.image.load('icon.png')
 pygame.display.set_icon(icon)
 
-tracks = ['1track.mp3', '2track.mp3']
+tracks = ['1track.mp3', '2track.mp3', 'Toby_Fox_-_Ruins_64962741.mp3','Jamie_Christopherson_-_The_Only_Thing_I_Know_for_Real_Jetstream_Sam_75934954.mp3']
+images = ['1.jpg','2.png','Undertale_Soundtrack_2015.svg.png','загруженное (1).jpg']
 current_track = 0
 
 pygame.mixer.init()
@@ -24,6 +27,12 @@ BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 
 font = pygame.font.SysFont('Arial', 28)
+
+def draw_image():
+    image = pygame.image.load(images [current_track])
+    image = pygame.transform.scale(image, (300,200))
+    screen.blit(image, (150,50))
+
 
 def draw_play_buttom():
     pygame.draw.rect(screen, GREEN, (230, 300, 100,50))
@@ -40,11 +49,23 @@ def draw_prev_buttom():
     text = font.render("<", True, BLACK)
     screen.blit(text, (120, 310))
 
+def prev_track():
+    global current_track
+    current_track=(current_track - 1)% len(tracks)
+    pygame.mixer.music.load(tracks[current_track])
+    pygame.mixer.music.play()
+
 def draw_next_buttom():
     pygame.draw.rect(screen, RED, (400, 300, 100, 50))
     text = font.render(">", True, BLACK)
-
     screen.blit(text, (420, 310))
+
+def next_track():
+    global current_track
+    current_track = (current_track + 1) % len(tracks)
+    pygame.mixer.music.load(tracks[current_track])
+    pygame.mixer.music.play()
+
 
 def play_music():
     pygame.mixer.music.play()
@@ -69,7 +90,12 @@ while True:
                 else:
                     pause_music()
                     is_playing = False
-
+            if 100 <= mouse_x <= 200 and 300 <= mouse_y <= 350:
+                prev_track()
+                is_playing = True
+            if 400 <= mouse_x <= 500 and 300 <= mouse_y <= 350:
+                next_track()
+                is_playing = True
 
 
 
@@ -77,5 +103,8 @@ while True:
         draw_play_buttom()
     else:
         draw_pause_buttom()
-
+    draw_prev_buttom()
+    draw_next_buttom()
+    draw_image()
     pygame.display.update()
+
